@@ -1,0 +1,15 @@
+<?php
+
+return [
+    'components' => [
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=api-payment-sample',
+            'username' => 'root',
+            'password' => 'root',
+            'charset' => 'utf8',
+            'enableSchemaCache' => true,
+            'queryCacheDuration' => 10800,
+        ],
+    ],
+];

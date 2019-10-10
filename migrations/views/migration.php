@@ -5,7 +5,7 @@
 echo "<?php\n";
 ?>
 
-use console\components\db\Migration;
+use app\components\db\Migration;
 
 /**
 * Class <?= $className . "\n"; ?>

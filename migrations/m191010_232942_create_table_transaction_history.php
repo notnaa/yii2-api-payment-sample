@@ -3,35 +3,36 @@
 use app\components\db\Migration;
 
 /**
- * Class m180128_195453_create_table_user
- */
-class m180128_195453_create_table_user extends Migration
+* Class m191010_232942_create_table_transaction_history
+*/
+class m191010_232942_create_table_transaction_history extends Migration
 {
     /** @var string */
-    private $tableName = '{{%user}}';
+    private $tableName = '{{%transaction_history}}';
 
     /**
      * @inheritdoc
+     * @throws \yii\db\Exception
      */
     public function safeUp()
     {
         $this->createTable($this->tableName, [
             'id' => $this->primaryKey(),
-            'username' => $this->string(25)->unique(),
-            'email' => $this->string()->unique(),
-            'password' => $this->string(),
-            'auth_key' => $this->string(),
-            'status' => $this->integer(1),
+            'wallet_id' => $this->integer()->notNull(),
+            'amount' => $this->decimal(17, 10)->notNull(),
+            'balance' => $this->decimal(17, 10)->notNull(),
             'created_by' => $this->integer(),
             'updated_by' => $this->integer(),
             'created_at' => $this->integer(14),
             'updated_at' => $this->integer(14),
         ]);
 
-        $this->createIndex(
-            'idx-user-username',
+        $this->addForeignKey(
+            'fk-transaction_history-wallet_id',
             $this->tableName,
-            'username'
+            'wallet_id',
+            '{{%user_wallets}}',
+            'id'
         );
     }
 

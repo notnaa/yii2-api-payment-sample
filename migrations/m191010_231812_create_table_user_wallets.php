@@ -3,41 +3,42 @@
 use app\components\db\Migration;
 
 /**
- * Class m180128_195453_create_table_user
- */
-class m180128_195453_create_table_user extends Migration
+* Class m191010_231812_create_table_user_wallets
+*/
+class m191010_231812_create_table_user_wallets extends Migration
 {
     /** @var string */
-    private $tableName = '{{%user}}';
+    private $tableName = '{{%user_wallets}}';
 
     /**
      * @inheritdoc
+     * @throws \yii\db\Exception
      */
     public function safeUp()
     {
         $this->createTable($this->tableName, [
             'id' => $this->primaryKey(),
-            'username' => $this->string(25)->unique(),
-            'email' => $this->string()->unique(),
-            'password' => $this->string(),
-            'auth_key' => $this->string(),
-            'status' => $this->integer(1),
+            'user_id' => $this->integer()->notNull(),
+            'balance' => $this->decimal(17, 10)->notNull()->defaultValue(0.00),
+            'currency' => $this->smallInteger(1)->notNull(),
             'created_by' => $this->integer(),
             'updated_by' => $this->integer(),
             'created_at' => $this->integer(14),
             'updated_at' => $this->integer(14),
         ]);
 
-        $this->createIndex(
-            'idx-user-username',
+        $this->addForeignKey(
+            'fk-user_wallets-user_id',
             $this->tableName,
-            'username'
+            'user_id',
+            '{{%user}}',
+            'id'
         );
     }
 
     /**
-     * @inheritdoc
-     */
+    * @inheritdoc
+    */
     public function safeDown()
     {
         $this->dropTable($this->tableName);

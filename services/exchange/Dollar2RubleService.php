@@ -1,0 +1,53 @@
+<?php
+
+namespace app\services\exchange;
+
+use app\models\forms\payment\ICurrencyDictionary;
+
+/**
+ * Class Dollar2RubleService
+ *
+ * @package app\services\exchange
+ */
+class Dollar2RubleService extends AbstractExchangeService
+{
+    /**
+     * @return int
+     */
+    public static function getCurrencyIdFrom(): int
+    {
+        return ICurrencyDictionary::USD;
+    }
+
+    /**
+     * @return int
+     */
+    public static function getCurrencyIdTo(): int
+    {
+        return ICurrencyDictionary::RUB;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getRateRub(): ?float
+    {
+        return $this->getExchangeRate(ICurrencyDictionary::USD);
+    }
+
+    /**
+     * @param float $amount
+     * @return float
+     * @throws \Exception
+     */
+    public function convert(float $amount): float
+    {
+        $rate = $this->getRateRub();
+
+        if ($rate === null) {
+            throw new \Exception('Invalid rate of currency.');
+        }
+
+        return ($amount * $rate);
+    }
+}

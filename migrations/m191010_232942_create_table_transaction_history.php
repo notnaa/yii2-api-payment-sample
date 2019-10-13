@@ -19,6 +19,7 @@ class m191010_232942_create_table_transaction_history extends Migration
         $this->createTable($this->tableName, [
             'id' => $this->primaryKey(),
             'wallet_id' => $this->integer()->notNull(),
+            'transaction_type' => $this->smallInteger(1)->notNull(),
             'amount' => $this->decimal(17, 10)->notNull(),
             'balance' => $this->decimal(17, 10)->notNull(),
             'created_by' => $this->integer(),

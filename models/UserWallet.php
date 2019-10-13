@@ -3,6 +3,7 @@
 namespace app\models;
 
 use app\components\db\ActiveRecord;
+use app\models\forms\payment\ICurrencyDictionary;
 use yii\db\ActiveQuery;
 
 /**
@@ -18,6 +19,8 @@ use yii\db\ActiveQuery;
  * @property int $updated_by
  * @property int $created_at
  * @property int $updated_at
+ *
+ * @property User $user
  */
 class UserWallet extends ActiveRecord
 {
@@ -38,6 +41,7 @@ class UserWallet extends ActiveRecord
             [['user_id', 'currency'], 'required'],
             [['user_id', 'currency'], 'integer'],
             [['balance'], 'number'],
+            [['currency'], 'in', 'range' => ICurrencyDictionary::SUPPORTED_CURRENCY],
             [['created_by', 'updated_by', 'created_at', 'updated_at'], 'safe'],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];

@@ -2,23 +2,23 @@
 
 namespace app\controllers;
 
-use app\components\rest\AbstractController;
+use yii\rest\Controller;
 
 /**
  * Class SiteController
  *
  * @package app\controllers
  */
-class SiteController extends AbstractController
+class SiteController extends Controller
 {
     /**
      * @return array
      */
     public function actionError()
     {
-        $this->addMessage('Bad request');
-        $this->fail();
-
-        return $this->responseData;
+        return [
+            'success' => false,
+            'message' => 'Undefined action.',
+        ];
     }
 }

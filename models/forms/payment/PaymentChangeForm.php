@@ -47,8 +47,9 @@ class PaymentChangeForm extends Model implements ICurrencyDictionary, ITransacti
     {
         return [
             [['wallet_id', 'transaction_type', 'amount', 'currency'], 'required'],
-            [['wallet_id', 'transaction_type', 'currency'], 'string'],
-            [['amount'], 'number'],
+            [['transaction_type', 'currency'], 'string'],
+            [['wallet_id'], 'integer'],
+            [['amount'], 'number', 'min' => 0.00],
             [['transaction_type'], 'in', 'range' => self::SUPPORTED_TRANSACTION_TYPES],
             [['currency'], 'in', 'range' => self::SUPPORTED_CURRENCY_TYPES],
         ];

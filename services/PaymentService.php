@@ -36,6 +36,10 @@ class PaymentService extends BaseObject
      */
     public function changeBalance(PaymentChangeForm $form): TransactionHistory
     {
+        if ($form->amount < 0) {
+            throw new PaymentException($form->wallet_id, PaymentException::INCORRECT_DATA);
+        }
+
         $currencyId = $form->getCurrencyIdByName();
 
         if ($currencyId === null) {

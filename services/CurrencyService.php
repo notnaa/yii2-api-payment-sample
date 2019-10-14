@@ -8,7 +8,6 @@ use app\models\forms\payment\ICurrencyDictionary;
 use app\models\forms\payment\PaymentChangeForm;
 use app\models\UserWallet;
 use app\services\exchange\Dollar2RubleService;
-use app\services\exchange\Ruble2DollarService;
 use yii\base\BaseObject;
 
 /**
@@ -20,8 +19,6 @@ class CurrencyService extends BaseObject
 {
     /** @var Dollar2RubleService */
     protected $dollar2RubleService;
-    /** @var Ruble2DollarService */
-    protected $ruble2DollarService;
 
     /**
      * @throws \yii\base\InvalidConfigException
@@ -32,7 +29,6 @@ class CurrencyService extends BaseObject
         parent::init();
 
         $this->dollar2RubleService = \Yii::$container->get(Dollar2RubleService::class);
-        $this->ruble2DollarService = \Yii::$container->get(Ruble2DollarService::class);
     }
 
     /**

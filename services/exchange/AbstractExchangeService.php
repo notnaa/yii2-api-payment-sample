@@ -4,6 +4,7 @@ namespace app\services\exchange;
 
 use app\models\forms\payment\ICurrencyDictionary;
 use yii\base\BaseObject;
+use yii\helpers\ArrayHelper;
 use yii\httpclient\Client;
 use yii\httpclient\XmlParser;
 
@@ -16,6 +17,14 @@ abstract class AbstractExchangeService extends BaseObject implements IExchange
 {
     /** @var string */
     private const CB_URL = 'http://www.cbr.ru/scripts/XML_daily.asp';
+
+    /** @var bool */
+    public $isTest = false;
+
+    /** @var array */
+    protected static $exchangeTestValues = [
+        'USD' => 60.00,
+    ];
 
     /** @var array|null */
     private $exchangeRate = null;
@@ -37,8 +46,14 @@ abstract class AbstractExchangeService extends BaseObject implements IExchange
     {
         parent::init();
 
-        if (!$this->requestExchangeRate()) {
-            throw new \Exception('Incorrect api response.');
+        $this->isTest = ArrayHelper::getValue(\Yii::$container->definitions, sprintf("%s.isTest", self::class));
+
+        if (!$this->isTest) {
+            if (!$this->requestExchangeRate()) {
+                throw new \Exception('Incorrect api response.');
+            }
+        } else {
+            $this->exchangeRate = static::$exchangeTestValues;
         }
     }
 

@@ -37,3 +37,8 @@ server {
   include /etc/nginx/common/phpmyadmin;
 }
 ```
+
+## Запуск тестов
+```
+php vendor/bin/codecept run unit
+```

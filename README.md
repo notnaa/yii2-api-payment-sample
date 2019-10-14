@@ -42,3 +42,37 @@ server {
 ```
 php vendor/bin/codecept run unit
 ```
+
+## API
+
+### Изменение баланса кошелька
+
+```
+POST /v1/payment/change
+
+wallet_id [int] - Идентификатор кошелька
+transaction_type [string] - Тип транзакции ("CREDIT"/"DEBIT")
+currency [string] - Валюта ("USD"/"RUB")
+amount [float] - Сумма (только положительные числа)
+```
+
+##### Response success sample
+```
+HTTP/1.1 200 OK
+{
+    "success": true,
+    "data": {
+        "transaction_id": 195
+    }
+}
+```
+
+#### Response error sample
+```
+HTTP/1.1 200 OK
+{
+    "success": false,
+    "code": 4,
+    "message": "Incorrect data."
+}
+```

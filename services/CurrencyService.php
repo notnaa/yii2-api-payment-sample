@@ -7,7 +7,7 @@ use app\models\forms\exchange\PaymentExchangeForm;
 use app\models\forms\payment\ICurrencyDictionary;
 use app\models\forms\payment\PaymentChangeForm;
 use app\models\UserWallet;
-use app\services\exchange\Dollar2RubleService;
+use app\services\exchange\AbstractExchangeService;
 use yii\base\BaseObject;
 
 /**
@@ -17,20 +17,6 @@ use yii\base\BaseObject;
  */
 class CurrencyService extends BaseObject
 {
-    /** @var Dollar2RubleService */
-    protected $dollar2RubleService;
-
-    /**
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\di\NotInstantiableException
-     */
-    public function init()
-    {
-        parent::init();
-
-        $this->dollar2RubleService = \Yii::$container->get(Dollar2RubleService::class);
-    }
-
     /**
      * @param PaymentChangeForm $changeForm
      * @param UserWallet $wallet
@@ -42,18 +28,34 @@ class CurrencyService extends BaseObject
         if ($wallet->currency === $changeForm->getCurrencyIdByName()) {
             $result = $changeForm->amount;
         } else {
-            switch ($wallet->currency) {
-                case ICurrencyDictionary::USD:
-                    $amountUsd = $this->getConvertToUsd($changeForm);
-                    $result = $amountUsd;
+            $exchangeServiceClass = null;
+
+            /** @var AbstractExchangeService $exchangeService */
+            foreach (AbstractExchangeService::getSupportedExchangeServices() as $exchangeService) {
+                if ($wallet->currency === ICurrencyDictionary::USD) {
                     break;
-                case ICurrencyDictionary::RUB:
-                    $amountUsd = $this->getConvertToUsd($changeForm);
-                    $result = $this->dollar2RubleService->convert($amountUsd);
+                }
+
+                if ($exchangeService::getCurrencyIdFrom() !== ICurrencyDictionary::USD) {
+                    continue;
+                }
+
+                if ($exchangeService::getCurrencyIdTo() === $wallet->currency) {
+                    $exchangeServiceClass = $exchangeService;
                     break;
-                default:
+                }
+            }
+
+            if ($exchangeServiceClass === null) {
+                if ($wallet->currency === ICurrencyDictionary::USD) {
+                    $result = $this->getConvertToUsd($changeForm);
+                } else {
                     $result = null;
-                    break;
+                }
+            } else {
+                $amountUsd = $this->getConvertToUsd($changeForm);
+                $service = \Yii::$container->get($exchangeServiceClass);
+                $result = $service->convert($amountUsd);
             }
         }
 

@@ -13,9 +13,10 @@
 composer install
 php init
 php yii migrate
+php yii_test migrate (only for tests)
 ```
 
-## NGINX
+### NGINX
 
 ```
 server {
@@ -47,6 +48,7 @@ php vendor/bin/codecept run unit
 
 ### Изменение баланса кошелька
 
+##### Request
 ```
 POST /v1/payment/change
 
@@ -67,7 +69,7 @@ HTTP/1.1 200 OK
 }
 ```
 
-#### Response error sample
+##### Response error sample
 ```
 HTTP/1.1 200 OK
 {
